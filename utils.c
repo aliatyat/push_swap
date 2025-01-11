@@ -28,14 +28,20 @@ int is_sorted(t_stack *stack)
 
 int validate_input(int argc, char **argv)
 {
-    for (int i = 1; i < argc; i++)
+    int i = 1;
+    while (i < argc)
     {
-        for (int j = 0; argv[i][j]; j++)
+        int j = 0;
+        while (argv[i][j])
         {
             if ((argv[i][j] == '-' && j == 0 && argv[i][j + 1] != '\0') || (argv[i][j] >= '0' && argv[i][j] <= '9'))
+            {
+                j++;
                 continue;
+            }
             return (0);
         }
+        i++;
     }
     return (1);
 }
