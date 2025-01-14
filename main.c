@@ -1,26 +1,5 @@
 #include "push_swap.h"
 
-t_stack *init_stack(void)
-{
-    t_stack *stack = malloc(sizeof(t_stack));
-    stack->top = NULL;
-    return (stack);
-}
-
-void free_stack(t_stack *stack)
-{
-    t_node *current = stack->top;
-    t_node *next;
-
-    while (current)
-    {
-        next = current->next;
-        free(current);
-        current = next;
-    }
-    free(stack);
-}
-
 int main(int argc, char **argv)
 {
     t_stack *a = init_stack();
@@ -31,13 +10,15 @@ int main(int argc, char **argv)
         write(2, "Error\n", 6);
         free_stack(a);
         free_stack(b);
-        return (1);
+        return 1;
     }
 
     int i = argc - 1;
     while (i > 0)
     {
         t_node *new_node = malloc(sizeof(t_node));
+        if (!new_node)
+            return (free_stack(a), free_stack(b), write(2, "Error\n", 6), 1);
         new_node->value = ft_atoi(argv[i]);
         new_node->next = a->top;
         a->top = new_node;
@@ -48,17 +29,19 @@ int main(int argc, char **argv)
     {
         free_stack(a);
         free_stack(b);
-        return (0);
+        return 0;
     }
 
-    if (stack_size(a) <= 3)
+    // Choose sorting method based on size
+    int size = stack_size(a);
+    if (size <= 3)
         sort_three(a);
-    else if (stack_size(a) <= 5)
+    else if (size <= 5)
         sort_five(a, b);
     else
-        sort_large(a, b);
+       sort_large(a, b);
 
     free_stack(a);
     free_stack(b);
-    return (0);
+    return 0;
 }

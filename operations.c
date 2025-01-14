@@ -82,3 +82,43 @@ void pa(t_stack *a, t_stack *b)
 
     write(1, "pa\n", 3);
 }
+
+void rb(t_stack *b)
+{
+    if (!b->top || !b->top->next)
+        return;
+
+    t_node *first = b->top;
+    t_node *last = b->top;
+
+    while (last->next)
+        last = last->next;
+
+    b->top = first->next;
+    first->next = NULL;
+    last->next = first;
+
+    write(1, "rb\n", 3);
+}
+
+
+void rrb(t_stack *b)
+{
+    if (!b->top || !b->top->next)
+        return;
+
+    t_node *prev = NULL;
+    t_node *last = b->top;
+
+    while (last->next)
+    {
+        prev = last;
+        last = last->next;
+    }
+
+    prev->next = NULL;
+    last->next = b->top;
+    b->top = last;
+
+    write(1, "rrb\n", 4);
+}

@@ -26,15 +26,17 @@ void    ra(t_stack *a);
 void    rra(t_stack *a);
 void    pb(t_stack *a, t_stack *b);
 void    pa(t_stack *a, t_stack *b);
+void rrb(t_stack *b);
+void rb(t_stack *b);
 
 int     stack_size(t_stack *stack);
 int     is_sorted(t_stack *stack);
 int     validate_input(int argc, char **argv);
 int     ft_atoi(const char *str);
-int     get_smallest(t_stack *a);
 
-void    sort_three(t_stack *a);
-void    sort_five(t_stack *a, t_stack *b);
-void    sort_large(t_stack *a, t_stack *b);
+void sort_three(t_stack *a);
+void sort_five(t_stack *a, t_stack *b);
+void    radix_sort(t_stack *a, t_stack *b);
+void sort_large(t_stack *a, t_stack *b);
 
 #endif
