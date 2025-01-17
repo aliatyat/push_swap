@@ -26,10 +26,10 @@ void free_stack(t_stack *stack)
 }
 
 // Convert a string to an integer
-int ft_atoi(const char *str)
+long ft_atol(const char *str)
 {
-    int res = 0;
-    int sign = 1;
+    long res = 0;
+    long sign = 1;
 
     // Handle optional sign
     if (*str == '-')
@@ -75,27 +75,54 @@ int stack_size(t_stack *stack)
     return size;
 }
 
-// Validate the input arguments
+#include <limits.h>
+
+int is_valid_number(const char *str)
+{
+    int j = 0;
+
+    while (str[j])
+    {
+        if (!(str[j] == '-' && j == 0 && str[j + 1] != '\0') 
+            && !(str[j] >= '0' && str[j] <= '9'))
+            return (0);
+        j++;
+    }
+    if (INT_MAX < ft_atol(str))
+        return (0);
+    return (1);
+}
+
+int has_duplicates(int argc, char **argv)
+{
+    int i = 1;
+    int j;
+
+    while (i < argc)
+    {
+        j = i + 1;
+        while (j < argc)
+        {
+            if (ft_atol(argv[i]) == ft_atol(argv[j]))
+                return (1);
+            j++;
+        }
+        i++;
+    }
+    return (0);
+}
+
 int validate_input(int argc, char **argv)
 {
     int i = 1;
 
     while (i < argc)
     {
-        int j = 0;
-
-        // Check each character of the argument
-        while (argv[i][j])
-        {
-            if ((argv[i][j] == '-' && j == 0 && argv[i][j + 1] != '\0') ||
-                (argv[i][j] >= '0' && argv[i][j] <= '9'))
-            {
-                j++;
-                continue;
-            }
-            return 0; // Invalid input
-        }
+        if (!is_valid_number(argv[i]))
+            return (0);
         i++;
     }
-    return 1; // All inputs are valid
+    if (has_duplicates(argc, argv))
+        return (0);
+    return (1);
 }

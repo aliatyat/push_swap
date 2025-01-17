@@ -1,47 +1,82 @@
 #include "push_swap.h"
 
-int main(int argc, char **argv)
+// Initialize stack A and B
+void initialize_stacks(t_stack **a, t_stack **b)
 {
-    t_stack *a = init_stack();
-    t_stack *b = init_stack();
+    *a = init_stack();
+    *b = init_stack();
+}
 
+// Validate input and initialize stack A
+int handle_input(int argc, char **argv, t_stack *a, t_stack *b)
+{
     if (argc < 2 || !validate_input(argc, argv))
     {
         write(2, "Error\n", 6);
         free_stack(a);
         free_stack(b);
-        return 1;
+        return (0);
     }
+    return (1);
+}
 
-    int i = argc - 1;
+// Populate stack A with input values
+int populate_stack(t_stack *a, t_stack *b, int argc, char **argv)
+{
+    int     i;
+    t_node  *new_node;
+
+    i = argc - 1;
     while (i > 0)
     {
-        t_node *new_node = malloc(sizeof(t_node));
+        new_node = malloc(sizeof(t_node));
         if (!new_node)
-            return (free_stack(a), free_stack(b), write(2, "Error\n", 6), 1);
-        new_node->value = ft_atoi(argv[i]);
+        {
+            write(2, "Error\n", 6);
+            free_stack(a);
+            free_stack(b);
+            return (0);
+        }
+        new_node->value = ft_atol(argv[i]);
         new_node->next = a->top;
         a->top = new_node;
         i--;
     }
+    return (1);
+}
 
+// Choose sorting algorithm based on stack size
+void choose_sort(t_stack *a, t_stack *b)
+{
     if (is_sorted(a))
-    {
-        free_stack(a);
-        free_stack(b);
-        return 0;
-    }
-
-    // Choose sorting method based on size
-    int size = stack_size(a);
-    if (size <= 3)
+        return;
+    if (stack_size(a) <= 3)
         sort_three(a);
-    else if (size <= 5)
+    else if (stack_size(a) <= 5)
         sort_five(a, b);
     else
-       sort_large(a, b);
+        sort_large(a, b);
+}
 
+// Free both stacks and exit the program
+int cleanup_and_exit(t_stack *a, t_stack *b, int code)
+{
     free_stack(a);
     free_stack(b);
-    return 0;
+    return (code);
+}
+
+// Main function
+int main(int argc, char **argv)
+{
+    t_stack *a;
+    t_stack *b;
+
+    initialize_stacks(&a, &b);
+    if (!handle_input(argc, argv, a, b))
+        return (1);
+    if (!populate_stack(a, b, argc, argv))
+        return (1);
+    choose_sort(a, b);
+    return (cleanup_and_exit(a, b, 0));
 }
